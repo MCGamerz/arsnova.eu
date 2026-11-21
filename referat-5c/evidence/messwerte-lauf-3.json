@@ -1,0 +1,169 @@
+{
+  "release": "87c39334619fbcb0c5782b061da1ba0df0ba3142",
+  "zeit_utc": "2026-11-21T15:25:13.390147+00:00",
+  "linux": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "node": "v24.22.3",
+  "bubblewrap": "bubblewrap 0.12.0",
+  "quelle_git_blobs": {
+    "docker/open-weight-llm/entrypoint.sh": "ee6bb2211129bf9d9e0d62257a0fd7bc4774e0ad",
+    "docker/open-weight-llm/validate-bind.sh": "30c2f8935731944f423571aed42bc0e71c45ebfb",
+    "docker/open-weight-llm/validate-token.sh": "52ae43c3e2b8fd4d498e54158dcfcd4d48c583d7",
+    "docker/open-weight-llm/model-manifest.json": "b50790360a552e499f6cb173fe296f60bb608a8a",
+    "docker/open-weight-llm/model.sha256": "bc4ac17a4c320db26c18d1fa6cff72e47ec88853",
+    "docker/open-weight-llm/Dockerfile": "65abf56c89d8c9f0fbdfcdcbdea1b6d6c775b2a6",
+    "docker-compose.llm.yml": "b75ec5afc353a948eb6acd0e77150ce31a996461",
+    "scripts/open-weight-llm/verify-model.mjs": "61b76c3c93c47b814a548f42064594dff4b529a6",
+    "docker/spacy/requirements.txt": "c3270a694c9c347d1652128e11fe64a5f56f9643",
+    "docker/spacy/NOTICE": "448e229e05ad37250c1283b608d5367f26e87d6f",
+    "docker/spacy/Dockerfile": "e8d410c15b136186e0fe30a7f37f0e92bcce4f7a",
+    "docker/open-weight-llm/healthcheck.sh": "54dc0c8d0a0c08e1260a00b455478d14a391c765",
+    "scripts/open-weight-llm/prod-compose.mjs": "b62019f5457c7379c1022e9f76144c6dbc833060",
+    "scripts/open-weight-llm/prod-compose-policy.mjs": "9638912dff47a165672a59575a45f0ad78ddbc16"
+  },
+  "ergebnisse": [
+    {
+      "id": "A1",
+      "fall": "Release: Modell-Pins in Manifest, Prüfsummendatei und Startskript",
+      "soll": "3 identische SHA-256-Werte",
+      "ist": [
+        "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+        "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597"
+      ],
+      "status": "BESTANDEN"
+    },
+    {
+      "id": "A2",
+      "fall": "Release: Basisimage in Manifest und Dockerfile",
+      "soll": "identische Referenz mit SHA-256-Digest",
+      "ist": "ghcr.io/ggml-org/llama.cpp:server-b10524@sha256:57e505f69c3a55fa5dd9c15fced47cff7a899f5b5b504ea93d75b2f401b87830",
+      "status": "BESTANDEN"
+    },
+    {
+      "id": "H1",
+      "fall": "Release: deklarierte Containerhärtung",
+      "soll": "Root-FS ro, cap_drop ALL, no-new-privileges, /models ro",
+      "ist": {
+        "root_schreibgeschuetzt": true,
+        "cap_drop": [
+          "ALL"
+        ],
+        "security_opt": [
+          "no-new-privileges:true"
+        ],
+        "model_mounts": [
+          "${OPEN_WEIGHT_LLM_MODEL_DIR:?OPEN_WEIGHT_LLM_MODEL_DIR must be set}:/models:ro"
+        ]
+      },
+      "status": "BESTANDEN"
+    },
+    {
+      "id": "L1",
+      "fall": "Release: spaCy-Sprachpakete und eigene Hash-Pins in requirements.txt",
+      "soll": "Inventar von vier versionierten Wheel-URLs und Lizenzangaben",
+      "ist": {
+        "pakete": [
+          "de-core-news-sm",
+          "en-core-web-sm",
+          "fr-core-news-sm",
+          "es-core-news-sm"
+        ],
+        "wheel_urls": 4,
+        "mit_hash_in_requirements": 0,
+        "notice": [
+          "- de_core_news_sm 3.8.0 (MIT) — https://github.com/explosion/spacy-models",
+          "- en_core_web_sm 3.8.0 (MIT) — https://github.com/explosion/spacy-models",
+          "- fr_core_news_sm 3.8.0 (LGPL-LR) — https://github.com/explosion/spacy-models",
+          "- es_core_news_sm 3.8.0 (GPL-3.0) — https://github.com/explosion/spacy-models"
+        ]
+      },
+      "status": "BESTANDEN",
+      "bewertung": "Inventarbefund, keine Sicherheitsfreigabe"
+    },
+    {
+      "id": "I1",
+      "fall": "Positivkontrolle: Release-Prüfer, Prüfmanifest, 3 Referenzbytes",
+      "soll": "Exit 0, verified 3 bytes",
+      "ist": "Exit 0, fixture.bin: verified 3 bytes, sha256:ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+      "status": "BESTANDEN",
+      "exitcode": 0,
+      "stdout": "fixture.bin: verified 3 bytes, sha256:ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\n",
+      "stderr": ""
+    },
+    {
+      "id": "I2",
+      "fall": "Gegenprobe zu I1: nur Byte 3 von c nach d geändert",
+      "soll": "Exit 1, Error: GGUF digest mismatch",
+      "ist": "Exit 1, Error: GGUF digest mismatch: expected ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad, received a52d159f262b2c6ddb724a61840befc36eb30c88877a4030b65cbe86298449c9",
+      "status": "BESTANDEN",
+      "exitcode": 1,
+      "stdout": "",
+      "stderr": "file:///release/scripts/open-weight-llm/verify-model.mjs:27\n  throw new Error(`GGUF digest mismatch: expected ${manifest.sha256}, received ${digest}`);\n        ^\n\nError: GGUF digest mismatch: expected ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad, received a52d159f262b2c6ddb724a61840befc36eb30c88877a4030b65cbe86298449c9\n    at file:///release/scripts/open-weight-llm/verify-model.mjs:27:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n\nNode.js v24.22.3\n",
+      "bytezahl": 3,
+      "sha256": "a52d159f262b2c6ddb724a61840befc36eb30c88877a4030b65cbe86298449c9"
+    },
+    {
+      "id": "I3",
+      "fall": "Release-Manifest mit verkürzter Ersatzdatei",
+      "soll": "Exit 1, Error: GGUF size mismatch",
+      "ist": "Exit 1, Error: GGUF size mismatch: expected 2497281120, received 4",
+      "status": "BESTANDEN",
+      "exitcode": 1,
+      "stdout": "",
+      "stderr": "file:///release/scripts/open-weight-llm/verify-model.mjs:18\n  throw new Error(`GGUF size mismatch: expected ${manifest.sizeBytes}, received ${stat.size}`);\n        ^\n\nError: GGUF size mismatch: expected 2497281120, received 4\n    at file:///release/scripts/open-weight-llm/verify-model.mjs:18:9\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.22.3\n"
+    },
+    {
+      "id": "I4",
+      "fall": "Release-Manifest mit gleich großer Ersatzdatei (GGUF, dann Nullbytes)",
+      "soll": "Exit 1, Error: GGUF digest mismatch",
+      "ist": "Exit 1, Error: GGUF digest mismatch: expected 3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597, received 62bacf30fe682a64de170ad8856e0fdf7db9fef17587e1ef1961e47f45b408b4",
+      "status": "BESTANDEN",
+      "exitcode": 1,
+      "stdout": "",
+      "stderr": "file:///release/scripts/open-weight-llm/verify-model.mjs:27\n  throw new Error(`GGUF digest mismatch: expected ${manifest.sha256}, received ${digest}`);\n        ^\n\nError: GGUF digest mismatch: expected 3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597, received 62bacf30fe682a64de170ad8856e0fdf7db9fef17587e1ef1961e47f45b408b4\n    at file:///release/scripts/open-weight-llm/verify-model.mjs:27:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n\nNode.js v24.22.3\n",
+      "bytezahl": 2497281120,
+      "dauer_s": 1.787
+    },
+    {
+      "id": "E1",
+      "fall": "Release-Entrypoint: leeres Modellverzeichnis bei gültigem Test-Token",
+      "soll": "Exit 66, Pinned GGUF is not readable",
+      "ist": "Exit 66, Pinned GGUF is not readable at /models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+      "status": "BESTANDEN",
+      "exitcode": 66,
+      "stdout": "",
+      "stderr": "Pinned GGUF is not readable at /models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf\n"
+    },
+    {
+      "id": "E2",
+      "fall": "Release-Entrypoint: gleiche Umgebung, gleich große Ersatzdatei vorhanden",
+      "soll": "Exit 65, Pinned GGUF checksum mismatch",
+      "ist": "Exit 65, Pinned GGUF checksum mismatch",
+      "status": "BESTANDEN",
+      "exitcode": 65,
+      "stdout": "",
+      "stderr": "Pinned GGUF checksum mismatch\n"
+    },
+    {
+      "id": "H2",
+      "fall": "Linux-Mountprobe: separates Testverzeichnis wie /models schreibgeschützt eingebunden",
+      "soll": "Exit 30, EROFS",
+      "ist": "Exit 30, EROFS",
+      "status": "BESTANDEN",
+      "exitcode": 30,
+      "stdout": "EROFS\n",
+      "stderr": ""
+    },
+    {
+      "id": "H3",
+      "fall": "Gegenprobe zu H2: derselbe Mount schreibbar eingebunden",
+      "soll": "Exit 0, Schreiben erfolgreich",
+      "ist": "Exit 0, Schreiben erfolgreich",
+      "status": "BESTANDEN",
+      "exitcode": 0,
+      "stdout": "Schreiben erfolgreich\n",
+      "stderr": ""
+    }
+  ]
+}

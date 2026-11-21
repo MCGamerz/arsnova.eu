@@ -1,0 +1,85 @@
+{
+  "release": "87c39334619fbcb0c5782b061da1ba0df0ba3142",
+  "zeit_utc": "2026-11-21T16:26:45.669711+00:00",
+  "system": "Linux",
+  "architektur": "x86_64",
+  "bestanden": true,
+  "github_run": "https://github.com/MCGamerz/arsnova.eu/actions/runs/44924586077",
+  "github_versuch": "1",
+  "test_commit": "2a0bbfa56b238d9e5861887962b0675b85f91029",
+  "gepruefte_release_dateien": 14,
+  "docker_version": "28.0.4",
+  "compose_version": "2.38.2",
+  "release_basisimage": "ghcr.io/ggml-org/llama.cpp:server-b10524@sha256:57e505f69c3a55fa5dd9c15fced47cff7a899f5b5b504ea93d75b2f401b87830",
+  "modell_quellrevision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+  "modell_bytes": 2497281120,
+  "release_pruefer_original": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf: verified 2497281120 bytes, sha256:3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+  "original_sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+  "lokale_image_id": "sha256:69845da2499cd4155412a07cf62235b8832eb69ebed1e231d5df80b176bcb983",
+  "original": {
+    "health": "healthy",
+    "laeuft": true,
+    "zeit_bis_beobachtung_s": 6.845,
+    "docker_inspect": {
+      "image_id_stimmt": true,
+      "nutzer_stimmt": true,
+      "root_schreibgeschuetzt": true,
+      "models_schreibgeschuetzt": true,
+      "alle_capabilities_entzogen": true,
+      "privilegiengewinn_gesperrt": true
+    },
+    "kernel": {
+      "modellprozess": {
+        "Name": "llama-server",
+        "Uid": "65532\t65532\t65532\t65532",
+        "CapEff": "0000000000000000",
+        "CapBnd": "0000000000000000",
+        "NoNewPrivs": "1"
+      },
+      "mount_optionen": {
+        "/": [
+          "ro",
+          "relatime"
+        ],
+        "/tmp": [
+          "rw",
+          "nosuid",
+          "nodev",
+          "noexec",
+          "relatime"
+        ],
+        "/models": [
+          "ro",
+          "relatime"
+        ]
+      },
+      "schreibprobe_models": {
+        "exitcode": 1,
+        "meldung": "touch: cannot touch '/models/5c-schreibprobe/testdatei': Read-only file system"
+      },
+      "schreibprobe_tmp_exitcode": 0
+    },
+    "kernel_pruefungen": {
+      "prozess_ohne_root": true,
+      "cap_eff_null": true,
+      "cap_bnd_null": true,
+      "no_new_privs": true,
+      "root_ro": true,
+      "models_ro": true,
+      "model_schreiben_blockiert": true,
+      "tmp_schreiben_erlaubt": true
+    },
+    "bestanden": true
+  },
+  "gegenprobe": {
+    "sha256": "ca3b6bcafa8fd2221b2a8fda2d4bd9497024f4a89fea6d00eee022360b706a57",
+    "bytes": 2497281120,
+    "byte_offset": 2497281119,
+    "byte_vorher": 166,
+    "byte_nachher": 167,
+    "dauer_s": 9.55,
+    "exitcode": 65,
+    "meldung_checksum_mismatch": true,
+    "bestanden": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "L2",
+  "release": "87c39334619fbcb0c5782b061da1ba0df0ba3142",
+  "methode": "Statische Prüfung des Release-Dockerfiles und der Paketliste",
+  "dockerfile": "docker/spacy/Dockerfile",
+  "paketliste": "docker/spacy/requirements.txt",
+  "pip_install": [
+    "pip",
+    "install",
+    "--no-cache-dir",
+    "-r",
+    "requirements.txt"
+  ],
+  "wheel_urls": 4,
+  "wheel_urls_mit_sha256": [],
+  "require_hashes_im_installaufruf": false,
+  "require_hashes_in_paketliste": false,
+  "pip_require_hashes_im_dockerfile": false
+}
