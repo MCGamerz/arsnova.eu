@@ -1,0 +1,51 @@
+name: Moderationskompass 5C – Docker-Labor
+on:
+  push:
+    branches: ["referat/5c-docker"]
+    paths:
+      - ".github/workflows/referat-5c.yml"
+      - "referat-5c/tools/**"
+permissions:
+  contents: read
+jobs:
+  docker-labor:
+    name: Originalmodell, Containerrechte und Ein-Byte-Gegenprobe
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Prüfstand auschecken
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Öffentliches Originalmodell aus der festgelegten Revision beziehen
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=docker/open-weight-llm/model-manifest.json
+          mkdir -p "$RUNNER_TEMP/modelle"
+          model="$RUNNER_TEMP/modelle/$(jq -r .filename "$manifest")"
+          curl --fail --silent --show-error --location --retry 4 --retry-all-errors \
+            "$(jq -r .downloadUrl "$manifest")" --output "$model"
+          echo "MODELL=$model" >> "$GITHUB_ENV"
+      - name: Docker-Versuch mit dem Release und einer Ein-Byte-Variante ausführen
+        shell: bash
+        run: |
+          /usr/bin/python3 -c 'import yaml' || sudo apt-get install -y python3-yaml
+          /usr/bin/python3 referat-5c/tools/docker_labor.py --repo . --modell "$MODELL" --out messung-5c.json
+      - name: Messprotokoll ausgeben
+        if: always()
+        shell: bash
+        run: |
+          if test -f messung-5c.json; then
+            echo "BEGINN_MESSPROTOKOLL_5C"
+            cat messung-5c.json
+            echo "ENDE_MESSPROTOKOLL_5C"
+          fi
+      - name: Messprotokoll als Nachweis speichern
+        if: ${{ always() && hashFiles('messung-5c.json') != '' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: referat-5c-docker
+          path: messung-5c.json
+          if-no-files-found: error
+          retention-days: 14
